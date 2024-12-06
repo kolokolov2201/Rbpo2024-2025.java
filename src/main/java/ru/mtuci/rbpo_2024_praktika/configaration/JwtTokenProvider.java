@@ -67,6 +67,6 @@ public class JwtTokenProvider {
                 .getBody()
                 .get("auth", Collection.class)).stream()
                 .map(role -> new SimpleGrantedAuthority((String) role))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toSet());//commit test
     }
 }
