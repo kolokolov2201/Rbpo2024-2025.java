@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtProvider;
+
     @Override
     protected void doFilterInternal(@SuppressWarnings("null") HttpServletRequest request,
                                     @SuppressWarnings("null") HttpServletResponse response,
