@@ -69,7 +69,6 @@ public class AuthenticationController {
     }
 
     private String hashPassword(String password) {
-        // Реализуйте хеширование пароля (например, с использованием BCrypt)
-        return password; // Замените на реальную реализацию хеширования
+        return password;
     }
 }
