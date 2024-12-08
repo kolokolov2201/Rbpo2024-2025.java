@@ -10,13 +10,8 @@ import lombok.Data;
 public class AuthenticationRequest {
 
     private String email;
-
-
     private String password;
-
     @Enumerated(EnumType.STRING)
     private ApplicationRole role;
-
-
     private String username;
 }
