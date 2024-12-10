@@ -9,6 +9,11 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  logging:
+    level:
+      org.springframework.security: DEBUG
+      org.springframework.web.filter: DEBUG
+      org.springframework.security.web.authentication: DEBUG
 
 jwt:
   secret: KolokolovEgorVladimirovichBKS2201

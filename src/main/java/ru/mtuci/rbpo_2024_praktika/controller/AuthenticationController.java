@@ -6,8 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +20,7 @@ import ru.mtuci.rbpo_2024_praktika.configaration.JwtTokenProvider;
 import ru.mtuci.rbpo_2024_praktika.model.ApplicationUser;
 import ru.mtuci.rbpo_2024_praktika.model.AuthenticationRequest;
 import ru.mtuci.rbpo_2024_praktika.model.AuthenticationResponse;
+import ru.mtuci.rbpo_2024_praktika.model.UserDetailsImpl;
 import ru.mtuci.rbpo_2024_praktika.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -24,6 +28,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @Validated
+
 public class AuthenticationController {
 
     private final UserRepository userRepository;
@@ -52,7 +57,6 @@ public class AuthenticationController {
     }
 
 
-
     @PostMapping("/reg")
     public ResponseEntity<?> reg(@RequestBody AuthenticationRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
@@ -77,3 +81,4 @@ public class AuthenticationController {
         return passwordEncoder.encode(password);
     }
 }
+
