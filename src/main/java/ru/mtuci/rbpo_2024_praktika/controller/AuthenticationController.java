@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,7 @@ import ru.mtuci.rbpo_2024_praktika.model.ApplicationUser;
 import ru.mtuci.rbpo_2024_praktika.model.AuthenticationRequest;
 import ru.mtuci.rbpo_2024_praktika.model.AuthenticationResponse;
 import ru.mtuci.rbpo_2024_praktika.repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @RestController
 @RequestMapping("/auth")
@@ -49,6 +51,8 @@ public class AuthenticationController {
         }
     }
 
+
+
     @PostMapping("/reg")
     public ResponseEntity<?> reg(@RequestBody AuthenticationRequest request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
@@ -69,6 +73,7 @@ public class AuthenticationController {
     }
 
     private String hashPassword(String password) {
-        return password;
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return passwordEncoder.encode(password);
     }
 }
