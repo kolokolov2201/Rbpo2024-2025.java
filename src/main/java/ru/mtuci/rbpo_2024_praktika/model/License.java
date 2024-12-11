@@ -1,5 +1,6 @@
 package ru.mtuci.rbpo_2024_praktika.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "license")
@@ -23,14 +25,17 @@ public class License {
     @Column(name = "code", nullable = false)
     private String code;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private ApplicationUser applicationUser;
 
-    @Column(name = "product_id", nullable = false)
-    private Long productId;
+    @ManyToOne
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
 
-    @Column(name = "type_id", nullable = false)
-    private Long typeId;
+    @ManyToOne
+    @JoinColumn(name = "type_id", referencedColumnName = "id")
+    private LicenseType licenseType;
 
     @Column(name = "first_activation_date")
     @Temporal(TemporalType.DATE)
@@ -40,18 +45,32 @@ public class License {
     @Temporal(TemporalType.DATE)
     private Date endingDate;
 
-    @Column(name = "blocked", nullable = false)
+    @Column(name = "blocked")
     private Boolean blocked;
 
     @Column(name = "device_count")
     private Integer deviceCount;
 
-    @Column(name = "owner_id", nullable = false)
-    private Long ownerId;
+    @Getter
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
+    private ApplicationUser owner;
 
     @Column(name = "duration")
     private Integer duration;
 
     @Column(name = "description")
     private String description;
+
+    @OneToMany(mappedBy = "license", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("license")
+    private List<LicenseHistory> licenseHistories;
+
+    @OneToMany(mappedBy = "license", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("license")
+    private List<DeviceLicense> deviceLicenses;
+
+    public Boolean getBlocked() {
+        return blocked != null ? blocked : false;
+    }
 }
