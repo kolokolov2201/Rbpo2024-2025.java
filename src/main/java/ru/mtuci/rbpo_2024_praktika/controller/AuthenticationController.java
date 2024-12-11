@@ -84,7 +84,7 @@ public class AuthenticationController {
     public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String authorizationHeader) {
         try {
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                String token = authorizationHeader.substring(7); // Удаляем "Bearer "
+                String token = authorizationHeader.substring(7);
 
                 if (jwtTokenProvider.validateToken(token)) {
                     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
