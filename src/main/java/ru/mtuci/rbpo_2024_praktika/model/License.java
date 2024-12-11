@@ -33,11 +33,11 @@ public class License {
     private Long typeId;
 
     @Column(name = "first_activation_date")
-    @Temporal(TemporalType.DATE) // Указывает, что это поле будет хранить только дату без времени
+    @Temporal(TemporalType.DATE)
     private Date firstActivationDate;
 
     @Column(name = "ending_date")
-    @Temporal(TemporalType.DATE) // Указывает, что это поле будет хранить только дату без времени
+    @Temporal(TemporalType.DATE)
     private Date endingDate;
 
     @Column(name = "blocked", nullable = false)

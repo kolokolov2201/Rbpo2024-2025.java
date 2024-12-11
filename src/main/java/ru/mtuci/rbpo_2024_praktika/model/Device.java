@@ -1,10 +1,14 @@
 package ru.mtuci.rbpo_2024_praktika.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "device")
@@ -18,12 +22,18 @@ public class Device {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "mac_address", nullable = false, unique = true) // MAC-адрес должен быть уникальным
     private String macAddress;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private ApplicationUser applicationUser;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "device", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("device")
+    private List<DeviceLicense> deviceLicenses;
 }

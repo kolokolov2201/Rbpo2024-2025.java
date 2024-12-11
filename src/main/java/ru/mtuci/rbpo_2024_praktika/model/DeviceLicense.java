@@ -21,13 +21,13 @@ public class DeviceLicense {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "license_id", nullable = false)
-    private Long licenseId;
+    @ManyToOne
+    @JoinColumn(name = "license_id", referencedColumnName = "id")
+    private License license;
 
-    @Column(name = "device_id", nullable = false)
-    private Long deviceId;
+    @ManyToOne
+    @JoinColumn(name = "device_id", referencedColumnName = "id")
+    private Device device;
 
-    @Column(name = "activation_date", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date activateDate;
+    private Date activationDate;
 }

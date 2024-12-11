@@ -20,19 +20,15 @@ public class LicenseHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "license_id", nullable = false)
-    private Long licenseId;
+    @ManyToOne
+    @JoinColumn(name = "license_id", referencedColumnName = "id")
+    private License license;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private ApplicationUser applicationUser;
 
-    @Column(name = "status", nullable = false)
     private String status;
-
-    @Column(name = "change_date", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private Date changeDate;
-
-    @Column(name = "description")
     private String description;
 }
