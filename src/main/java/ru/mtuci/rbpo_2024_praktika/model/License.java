@@ -39,17 +39,17 @@ public class License {
 
     @Column(name = "first_activation_date")
     @Temporal(TemporalType.DATE)
-    private Date firstActivationDate;
+    private Date first_activation_date;
 
     @Column(name = "ending_date")
     @Temporal(TemporalType.DATE)
-    private Date endingDate;
+    private Date ending_date;
 
     @Column(name = "blocked")
     private Boolean blocked;
 
     @Column(name = "device_count")
-    private Integer deviceCount;
+    private Integer device_count;
 
     @Getter
     @ManyToOne(fetch = FetchType.EAGER)
@@ -64,11 +64,11 @@ public class License {
 
     @OneToMany(mappedBy = "license", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("license")
-    private List<LicenseHistory> licenseHistories;
+    private List<LicenseHistory> licenseHistory;
 
     @OneToMany(mappedBy = "license", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("license")
-    private List<DeviceLicense> deviceLicenses;
+    private List<DeviceLicense> deviceLicense;
 
     public Boolean getBlocked() {
         return blocked != null ? blocked : false;
