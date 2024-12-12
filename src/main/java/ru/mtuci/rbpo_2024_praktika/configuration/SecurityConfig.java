@@ -1,4 +1,4 @@
-package ru.mtuci.rbpo_2024_praktika.configaration;
+package ru.mtuci.rbpo_2024_praktika.configuration;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

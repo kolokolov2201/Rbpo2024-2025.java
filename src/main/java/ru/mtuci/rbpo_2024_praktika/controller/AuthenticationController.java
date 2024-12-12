@@ -8,20 +8,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.mtuci.rbpo_2024_praktika.configaration.JwtTokenProvider;
+import ru.mtuci.rbpo_2024_praktika.configuration.JwtTokenProvider;
 import ru.mtuci.rbpo_2024_praktika.model.ApplicationUser;
 import ru.mtuci.rbpo_2024_praktika.model.AuthenticationRequest;
 import ru.mtuci.rbpo_2024_praktika.model.AuthenticationResponse;
-import ru.mtuci.rbpo_2024_praktika.model.UserDetailsImpl;
 import ru.mtuci.rbpo_2024_praktika.repository.UserRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @RestController
 @RequestMapping("/auth")

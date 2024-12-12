@@ -1,4 +1,4 @@
-package ru.mtuci.rbpo_2024_praktika.configaration;
+package ru.mtuci.rbpo_2024_praktika.configuration;
 
 import java.io.IOException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
