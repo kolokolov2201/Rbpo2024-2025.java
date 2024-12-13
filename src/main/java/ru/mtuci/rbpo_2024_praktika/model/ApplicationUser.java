@@ -31,17 +31,17 @@ public class ApplicationUser {
 
     @OneToMany(mappedBy = "applicationUser", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("applicationUser")
-    private List<Device> devices;
+    private List<Device> device;
 
     @OneToMany(mappedBy = "applicationUser", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("applicationUser")
-    private List<LicenseHistory> licenseHistories;
+    private List<LicenseHistory> licenseHistory;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("owner")
-    private List<License> ownedLicenses;
+    private List<License> ownedLicense;
 
     @OneToMany(mappedBy = "applicationUser", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("applicationUser")
-    private List<License> usedLicenses;
+    private List<License> usedLicense;
 }

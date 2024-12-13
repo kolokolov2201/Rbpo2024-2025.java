@@ -39,17 +39,17 @@ public class License {
 
     @Column(name = "first_activation_date")
     @Temporal(TemporalType.DATE)
-    private Date first_activation_date;
+    private Date firstActivationDate;
 
     @Column(name = "ending_date")
     @Temporal(TemporalType.DATE)
-    private Date ending_date;
+    private Date endingDate;
 
     @Column(name = "blocked")
     private Boolean blocked;
 
     @Column(name = "device_count")
-    private Integer device_count;
+    private Integer deviceCount;
 
     @Getter
     @ManyToOne(fetch = FetchType.EAGER)

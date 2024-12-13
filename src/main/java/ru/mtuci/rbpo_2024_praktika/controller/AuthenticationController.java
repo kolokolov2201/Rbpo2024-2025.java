@@ -14,7 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.mtuci.rbpo_2024_praktika.configuration.JwtTokenProvider;
 import ru.mtuci.rbpo_2024_praktika.model.ApplicationUser;
-import ru.mtuci.rbpo_2024_praktika.model.AuthenticationRequest;
+import ru.mtuci.rbpo_2024_praktika.request.AuthenticationRequest;
 import ru.mtuci.rbpo_2024_praktika.model.AuthenticationResponse;
 import ru.mtuci.rbpo_2024_praktika.repository.UserRepository;
 

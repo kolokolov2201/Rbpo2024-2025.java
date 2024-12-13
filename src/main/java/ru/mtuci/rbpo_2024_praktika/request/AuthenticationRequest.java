@@ -1,9 +1,10 @@
-package ru.mtuci.rbpo_2024_praktika.model;
+package ru.mtuci.rbpo_2024_praktika.request;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import ru.mtuci.rbpo_2024_praktika.model.ApplicationRole;
 
 @Data
 @AllArgsConstructor

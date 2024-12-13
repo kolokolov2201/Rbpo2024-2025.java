@@ -1,7 +1,9 @@
 package ru.mtuci.rbpo_2024_praktika.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.mtuci.rbpo_2024_praktika.model.Device;
 import ru.mtuci.rbpo_2024_praktika.model.License;
 
@@ -16,13 +18,13 @@ import java.util.UUID;
 public class Ticket {
 
     private Date serverDate;
-    private Long ticketLifetime;
-    private Date first_activation_date;
-    private Date ending_date;
+    private Long Lifetime;
+    private Date firstActivationDate;
+    private Date endingDate;
     private Long userId;
     private String deviceId;
     private String blocked;
-    private String digital_signature;
+    private String digitalSignature;
     @JsonIgnore
     private License license;
     @JsonIgnore

@@ -35,5 +35,5 @@ public class Device {
     @JsonIgnore
     @OneToMany(mappedBy = "device", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("device")
-    private List<DeviceLicense> deviceLicenses;
+    private List<DeviceLicense> deviceLicense;
 }
