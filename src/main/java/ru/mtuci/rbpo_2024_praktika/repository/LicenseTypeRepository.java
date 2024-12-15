@@ -1,4 +1,7 @@
 package ru.mtuci.rbpo_2024_praktika.repository;
 
-public interface LicenseTypeRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+import ru.mtuci.rbpo_2024_praktika.model.LicenseType;
+
+public interface LicenseTypeRepository extends JpaRepository<LicenseType, Long> {
 }

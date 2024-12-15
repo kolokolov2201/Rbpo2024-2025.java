@@ -1,4 +1,30 @@
 package ru.mtuci.rbpo_2024_praktika.service.impl;
 
-public class ProductServiceImpl {
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import ru.mtuci.rbpo_2024_praktika.model.Product;
+import ru.mtuci.rbpo_2024_praktika.repository.ProductRepository;
+import ru.mtuci.rbpo_2024_praktika.request.ProductRequest;
+import ru.mtuci.rbpo_2024_praktika.service.ProductService;
+
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
+public class ProductServiceImpl implements ProductService {
+
+    private final ProductRepository productRepository;
+
+    @Override
+    public Optional<Product> findById(Long id) {
+        return productRepository.findById(id);
+    }
+
+    @Override
+    public Product createProduct(ProductRequest productRequest) {
+        Product product = new Product();
+        product.setName(productRequest.getName());
+        product.setIsBlocked(productRequest.getIsBlocked());
+        return productRepository.save(product);
+    }
 }

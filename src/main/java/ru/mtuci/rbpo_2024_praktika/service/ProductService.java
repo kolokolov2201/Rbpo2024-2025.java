@@ -1,4 +1,9 @@
 package ru.mtuci.rbpo_2024_praktika.service;
 
-public class ProductService {
+import ru.mtuci.rbpo_2024_praktika.model.Product;
+import java.util.Optional;
+
+public interface ProductService {
+    Optional<Product> findById(Long id);
+    Product createProduct(ru.mtuci.rbpo_2024_praktika.request.ProductRequest productRequest);
 }
