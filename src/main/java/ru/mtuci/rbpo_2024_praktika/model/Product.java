@@ -25,11 +25,10 @@ public class Product {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "id_blocked", nullable = false)
-    private Boolean idBlocked;
+    @Column(name = "is_blocked", nullable = false)
+    private Boolean isBlocked;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonIgnore    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("product")
     private List<License> license;
 }

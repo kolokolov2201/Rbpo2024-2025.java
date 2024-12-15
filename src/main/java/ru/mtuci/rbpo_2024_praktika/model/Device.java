@@ -24,7 +24,7 @@ public class Device {
 
     private String name;
 
-    @Column(name = "mac_address", nullable = false, unique = true) // MAC-адрес должен быть уникальным
+    @Column(name = "mac_address", nullable = false, unique = true)
     private String macAddress;
 
     @JsonIgnore
