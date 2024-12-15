@@ -18,48 +18,4 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/license-type")
 public class LicenseTypeController {
-
-    private final LicenseTypeService licenseTypeService;
-    private final LicenseService licenseService;
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/add")
-    public ResponseEntity<String> addLicenseType(@RequestBody LicenseTypeAddRequest licenseTypeAddRequest) {
-        try {
-            LicenseType createdLicenseType = licenseTypeService.addLicenseType(licenseTypeAddRequest.getName(),licenseTypeAddRequest.getDefaultDuration(),licenseTypeAddRequest.getDescription());
-            return ResponseEntity.ok("Тип лицензии создан с ID: " + createdLicenseType.getId());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Ошибка: " + e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Ошибка: " + e.getMessage());
-        }
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> removeLicenseType(@PathVariable Long id) {
-        try {
-            if (licenseService.existsByLicenseType(id)) {
-                return ResponseEntity.badRequest().body("Невозможно удалить LicenseType.");
-            }
-            licenseTypeService.deleteById(id);
-            return ResponseEntity.ok("LicenseType удалён.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка: " + e.getMessage());
-        }
-    }
-
-    @GetMapping("/view")
-    public ResponseEntity<List<LicenseType>> getAllLicenseTypes() {
-        try {
-            List<LicenseType> licenseTypes = licenseTypeService.findAll();
-            if (licenseTypes.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
-            return ResponseEntity.ok(licenseTypes);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
-        }
-    }
 }
