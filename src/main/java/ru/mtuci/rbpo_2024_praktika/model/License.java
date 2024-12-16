@@ -38,11 +38,11 @@ public class License {
     private LicenseType licenseType;
 
     @Column(name = "first_activation_date")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date firstActivationDate;
 
     @Column(name = "ending_date")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date endingDate;
 
     @Column(name = "blocked")

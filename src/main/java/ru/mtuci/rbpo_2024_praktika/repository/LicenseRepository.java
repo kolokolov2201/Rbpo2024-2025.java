@@ -5,4 +5,5 @@ import ru.mtuci.rbpo_2024_praktika.model.License;
 
 public interface LicenseRepository extends JpaRepository<License, Long> {
     boolean existsByCode(String code);
+    boolean existsByLicenseTypeId(Long licenseTypeId);
 }

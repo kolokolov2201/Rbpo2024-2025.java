@@ -17,6 +17,7 @@ import ru.mtuci.rbpo_2024_praktika.service.LicenseTypeService;
 import ru.mtuci.rbpo_2024_praktika.service.ProductService;
 import ru.mtuci.rbpo_2024_praktika.service.UserService;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -64,5 +65,22 @@ public class LicenseServiceImpl implements LicenseService {
         License savedLicense = licenseRepository.save(license);
         licenseHistoryService.recordLicenseChange(savedLicense, user, "Creation", "License successfully created");
         return savedLicense;
+    }
+    @Override
+    public boolean existsByLicenseTypeId(Long licenseTypeId) {
+        return  licenseRepository.existsByLicenseTypeId(licenseTypeId);
+    }
+
+    @Override
+    public void deleteLicense(Long id) {
+        if(!licenseRepository.existsById(id)){
+            throw new IllegalArgumentException("License not found for id: " + id);
+        }
+        licenseRepository.deleteById(id);
+    }
+
+    @Override
+    public List<License> getAllLicenses() {
+        return licenseRepository.findAll();
     }
 }

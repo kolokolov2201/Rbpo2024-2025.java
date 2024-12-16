@@ -7,6 +7,7 @@ import ru.mtuci.rbpo_2024_praktika.repository.ProductRepository;
 import ru.mtuci.rbpo_2024_praktika.request.ProductRequest;
 import ru.mtuci.rbpo_2024_praktika.service.ProductService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,5 +27,17 @@ public class ProductServiceImpl implements ProductService {
         product.setName(productRequest.getName());
         product.setIsBlocked(productRequest.getIsBlocked());
         return productRepository.save(product);
+    }
+    @Override
+    public void deleteProduct(Long id) {
+        if(!productRepository.existsById(id)){
+            throw new IllegalArgumentException("Product not found for id: " + id);
+        }
+        productRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
     }
 }

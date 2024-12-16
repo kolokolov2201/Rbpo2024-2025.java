@@ -10,6 +10,7 @@ import ru.mtuci.rbpo_2024_praktika.request.DeviceRequest;
 import ru.mtuci.rbpo_2024_praktika.service.DeviceService;
 import ru.mtuci.rbpo_2024_praktika.service.UserService;
 
+import java.util.List;
 import java.util.Random;
 
 
@@ -48,5 +49,17 @@ public class DeviceServiceImpl implements DeviceService {
         }
         macAddress.deleteCharAt(macAddress.length() - 1);
         return macAddress.toString();
+    }
+    @Override
+    public void deleteDevice(Long id) {
+        if(!deviceRepository.existsById(id)){
+            throw new IllegalArgumentException("Device not found for id: " + id);
+        }
+        deviceRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Device> getAllDevices() {
+        return deviceRepository.findAll();
     }
 }

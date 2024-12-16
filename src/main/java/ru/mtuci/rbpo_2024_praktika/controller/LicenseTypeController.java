@@ -5,13 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.mtuci.rbpo_2024_praktika.model.LicenseType;
 import ru.mtuci.rbpo_2024_praktika.request.LicenseTypeRequest;
 import ru.mtuci.rbpo_2024_praktika.service.LicenseTypeService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/licensetypes")
@@ -28,6 +27,28 @@ public class LicenseTypeController {
             return new ResponseEntity<>(createdLicenseType, HttpStatus.CREATED);
         } catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteLicenseType(@PathVariable Long id) {
+        try {
+            licenseTypeService.deleteLicenseType(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    @GetMapping("/view")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<LicenseType>> getAllLicenseTypes() {
+        try {
+            List<LicenseType> licenseTypes = licenseTypeService.getAllLicenseTypes();
+            return new ResponseEntity<>(licenseTypes, HttpStatus.OK);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
