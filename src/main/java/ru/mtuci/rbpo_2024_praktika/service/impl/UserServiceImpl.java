@@ -6,6 +6,7 @@ import ru.mtuci.rbpo_2024_praktika.model.ApplicationUser;
 import ru.mtuci.rbpo_2024_praktika.repository.UserRepository;
 import ru.mtuci.rbpo_2024_praktika.service.UserService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,5 +18,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<ApplicationUser> findById(Long id) { 
         return userRepository.findById(id);
+    }
+    @Override
+    public void deleteUser(Long id) {
+        if(!userRepository.existsById(id)){
+            throw new IllegalArgumentException("User not found for id: " + id);
+        }
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ApplicationUser> getAllUsers() {
+        return userRepository.findAll();
     }
 }
