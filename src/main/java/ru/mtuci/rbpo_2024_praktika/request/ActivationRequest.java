@@ -5,6 +5,6 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class LicenseActivationRequest {
+public class ActivationRequest {
 
 }
