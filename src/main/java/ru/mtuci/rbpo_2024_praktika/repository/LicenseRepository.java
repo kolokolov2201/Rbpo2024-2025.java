@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface LicenseRepository extends JpaRepository<License, Long> {
     boolean existsByCode(String code);
-    boolean existsByLicenseTypeId(Long licenseTypeId);
     List<License> findByApplicationUser(ApplicationUser applicationUser);
     Optional<License> findByCode(String code);
 }

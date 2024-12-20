@@ -1,7 +1,6 @@
 package ru.mtuci.rbpo_2024_praktika.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.mtuci.rbpo_2024_praktika.exception.*;
 import ru.mtuci.rbpo_2024_praktika.model.*;

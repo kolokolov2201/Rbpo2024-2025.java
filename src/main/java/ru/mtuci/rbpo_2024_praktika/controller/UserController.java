@@ -2,17 +2,13 @@ package ru.mtuci.rbpo_2024_praktika.controller;
 
 import org.springframework.web.bind.annotation.*;
 import ru.mtuci.rbpo_2024_praktika.model.ApplicationUser;
-import ru.mtuci.rbpo_2024_praktika.repository.LicenseRepository;
-import ru.mtuci.rbpo_2024_praktika.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import ru.mtuci.rbpo_2024_praktika.service.ProductService;
 import ru.mtuci.rbpo_2024_praktika.service.UserService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
