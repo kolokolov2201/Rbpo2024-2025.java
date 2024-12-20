@@ -8,4 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface DeviceRepository extends JpaRepository<Device, Long> {
+    Optional<Device> findByMacAddress(String macAddress);
 }

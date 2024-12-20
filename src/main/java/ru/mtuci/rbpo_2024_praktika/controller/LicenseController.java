@@ -9,7 +9,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.mtuci.rbpo_2024_praktika.exception.ActivationNotPossibleException;
 import ru.mtuci.rbpo_2024_praktika.exception.LicenseNotFoundException;
-import ru.mtuci.rbpo_2024_praktika.model.ApplicationUser;
 import ru.mtuci.rbpo_2024_praktika.model.Device;
 import ru.mtuci.rbpo_2024_praktika.model.License;
 import ru.mtuci.rbpo_2024_praktika.model.Ticket;

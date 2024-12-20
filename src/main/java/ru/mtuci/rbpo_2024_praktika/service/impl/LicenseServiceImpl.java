@@ -69,10 +69,6 @@ public class LicenseServiceImpl implements LicenseService {
         licenseHistoryService.recordLicenseChange(savedLicense, user, "Creation", "License successfully created");
         return savedLicense;
     }
-    @Override
-    public boolean existsByLicenseTypeId(Long licenseTypeId) {
-        return  licenseRepository.existsByLicenseTypeId(licenseTypeId);
-    }
 
     @Override
     public void deleteLicense(Long id) {
@@ -149,6 +145,28 @@ public class LicenseServiceImpl implements LicenseService {
         calendar.setTime(startDate);
         calendar.add(Calendar.DAY_OF_YEAR, duration);
         return calendar.getTime();
+    }
+    @Override
+    public List<Ticket> getLicenseInfo(String macAddress) {
+        Optional<Device> optionalDevice = deviceRepository.findByMacAddress(macAddress);
+        if (optionalDevice.isPresent()) {
+            Device device = optionalDevice.get();
+            List<License> licenses = licenseRepository.findByApplicationUser(device.getApplicationUser());
+            if (!licenses.isEmpty()) {
+                List<Ticket> tickets = new ArrayList<>();
+                for (License license : licenses) {
+                    tickets.add(ticketGenerator.generateTicket(license, device));
+                }
+                return tickets;
+
+
+            } else {
+                return null;
+            }
+
+        } else {
+            return null;
+        }
     }
 }
 

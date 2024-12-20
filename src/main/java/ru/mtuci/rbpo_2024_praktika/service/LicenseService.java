@@ -12,6 +12,6 @@ public interface LicenseService {
     License createLicense(LicenseRequest licenseRequest);
     void deleteLicense(Long id);
     List<License> getAllLicenses();
-    boolean existsByLicenseTypeId(Long licenseTypeId);
     Ticket activateLicense(String code, String deviceId, Device device);
+    List<Ticket> getLicenseInfo(String macAddress);
 }
