@@ -30,7 +30,6 @@ public class DeviceServiceImpl implements DeviceService {
 
         Device device = new Device();
         device.setName(deviceRequest.getName());
-        //Генерируем MAC-адрес если он не задан в запросе.
         String macAddress = deviceRequest.getMacAddress();
         if (macAddress == null || macAddress.isEmpty()) {
             macAddress = generateRandomMacAddress();

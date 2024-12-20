@@ -73,4 +73,7 @@ public class License {
     public Boolean getBlocked() {
         return blocked != null ? blocked : false;
     }
+    public boolean isActive() {
+        return getDeviceCount() > 0 && !getBlocked();
+    }
 }

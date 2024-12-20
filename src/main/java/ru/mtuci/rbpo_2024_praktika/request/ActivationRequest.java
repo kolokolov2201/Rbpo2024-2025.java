@@ -6,5 +6,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class ActivationRequest {
-
+    private String Code;
+    private String deviceId;
 }
