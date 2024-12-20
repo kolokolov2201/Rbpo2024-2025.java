@@ -17,10 +17,7 @@ import ru.mtuci.rbpo_2024_praktika.service.UserService;
 import ru.mtuci.rbpo_2024_praktika.repository.DeviceRepository;
 
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 
 @Service
@@ -35,6 +32,7 @@ public class LicenseServiceImpl implements LicenseService {
     private final TicketGenerator ticketGenerator;
     private final DeviceLicenseRepository deviceLicenseRepository;
     private final LicenseHistoryRepository licenseHistoryRepository;
+    private final DeviceRepository deviceRepository;
     @Override
     public License createLicense(LicenseRequest licenseRequest) {
         Long productId = licenseRequest.getProductId();
@@ -64,6 +62,8 @@ public class LicenseServiceImpl implements LicenseService {
         license.setBlocked(false);
         license.setFirstActivationDate(null);
         license.setEndingDate(null);
+        license.setDuration(licenseType.getDefaultDuration());
+        license.setDescription(licenseRequest.getDescription());
 
         License savedLicense = licenseRepository.save(license);
         licenseHistoryService.recordLicenseChange(savedLicense, user, "Creation", "License successfully created");
@@ -88,7 +88,7 @@ public class LicenseServiceImpl implements LicenseService {
     }
 
     @Override
-    public Ticket activateLicense(String code, String deviceId, Device device, ApplicationUser applicationUser) {
+    public Ticket activateLicense(String code, String deviceId, Device device) {
         Optional<License> optionalLicense = licenseRepository.findByCode(code);
 
         if (optionalLicense.isPresent()) {
@@ -98,32 +98,57 @@ public class LicenseServiceImpl implements LicenseService {
                 throw new ActivationNotPossibleException("Лицензия не активна");
             }
 
+            Optional<Device> optionalDevice = deviceRepository.findById(device.getId());
+            if (optionalDevice.isEmpty()){
+                throw new DeviceNotFoundException("Устройство с ID "+ device.getId() + " не найдено");
+            }
+            Device actualDevice = optionalDevice.get();
+
             DeviceLicense deviceLicense = new DeviceLicense();
             deviceLicense.setLicense(license);
-            deviceLicense.setDevice(device);
+            deviceLicense.setDevice(actualDevice);
             deviceLicense.setActivationDate(new Date());
             deviceLicenseRepository.save(deviceLicense);
 
-            if (license.getFirstActivationDate() == null) {
-                license.setFirstActivationDate(new Date());
+            Date firstActivationDate = license.getFirstActivationDate();
+            Date endingDate = null;
+
+            if (firstActivationDate == null) {
+                firstActivationDate = new Date();
+                license.setFirstActivationDate(firstActivationDate);
             }
+
+            if (license.getDuration() != null){
+                if (license.getDuration() > 0){
+                    endingDate = calculateEndingDate(firstActivationDate, license.getDuration());
+                }
+            }
+
+            license.setEndingDate(endingDate);
             license.setBlocked(false);
-            licenseRepository.save(license);
 
-            LicenseHistory licenseHistory = new LicenseHistory();
-            licenseHistory.setLicense(license);
-            licenseHistory.setApplicationUser(applicationUser);
-            licenseHistory.setStatus("Activation");
-            licenseHistory.setChangeDate(new Date());
-            licenseHistory.setDescription("Лицензия активирована на устройстве с ID: " + deviceId);
+            License savedLicense = licenseRepository.save(license);
+            ApplicationUser applicationUser = actualDevice.getApplicationUser();
 
-            licenseHistoryRepository.save(licenseHistory);
 
-            return ticketGenerator.generateTicket(license, device);
+            if (applicationUser != null){
+                licenseHistoryService.recordLicenseChange(savedLicense, applicationUser, "Activation", "License successfully activated");
+            } else {
+                throw new IllegalArgumentException("ApplicationUser can not be null when activating a license");
+            }
+
+            return ticketGenerator.generateTicket(license, actualDevice);
+
         } else {
             throw new LicenseNotFoundException("Лицензия не найдена");
         }
     }
 
-
+    private Date calculateEndingDate(Date startDate, int duration) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+        calendar.add(Calendar.DAY_OF_YEAR, duration);
+        return calendar.getTime();
+    }
 }
+

@@ -66,14 +66,14 @@ public class LicenseController {
         }
     }
     @PostMapping("/activate")
-    public ResponseEntity<?> activateLicense(@RequestBody ActivationRequest request, ApplicationUser applicationUser) {
+    public ResponseEntity<?> activateLicense(@RequestBody ActivationRequest request) {
         try {
             Long deviceId = Long.parseLong(request.getDeviceId());
             Optional<Device> optionalDevice = deviceRepository.findById(deviceId);
             if (optionalDevice.isEmpty()) {
                 return ResponseEntity.badRequest().body("Устройство не найдено");
             }
-            Ticket ticket = licenseService.activateLicense(request.getCode(), String.valueOf(deviceId), optionalDevice.get(), applicationUser);
+            Ticket ticket = licenseService.activateLicense(request.getCode(), String.valueOf(deviceId), optionalDevice.get());
 
             return ResponseEntity.ok(ticket);
         } catch (NumberFormatException e) {

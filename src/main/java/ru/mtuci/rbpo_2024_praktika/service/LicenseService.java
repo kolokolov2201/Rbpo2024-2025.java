@@ -13,5 +13,5 @@ public interface LicenseService {
     void deleteLicense(Long id);
     List<License> getAllLicenses();
     boolean existsByLicenseTypeId(Long licenseTypeId);
-    Ticket activateLicense(String code, String deviceId, Device device, ApplicationUser applicationUser);
+    Ticket activateLicense(String code, String deviceId, Device device);
 }
