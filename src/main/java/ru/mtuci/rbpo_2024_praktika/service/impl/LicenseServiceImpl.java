@@ -167,5 +167,31 @@ public class LicenseServiceImpl implements LicenseService {
             return null;
         }
     }
+    @Override
+    public void blockLicense(Long licenseId) {
+        License license = licenseRepository.findById(licenseId)
+                .orElseThrow(() -> new LicenseNotFoundException("Лицензия не найдена."));
+
+        if (license.getBlocked()) {
+            throw new LicenseStateException("Лицензия уже заблокирована.");
+        }
+
+        license.setBlocked(true);
+        licenseRepository.save(license);
+    }
+
+    @Override
+    public void unblockLicense(Long licenseId) {
+        License license = licenseRepository.findById(licenseId)
+                .orElseThrow(() -> new LicenseNotFoundException("Лицензия не найдена."));
+
+        if (!license.getBlocked()) {
+            throw new LicenseStateException("Лицензия уже разблокирована.");
+        }
+
+
+        license.setBlocked(false);
+        licenseRepository.save(license);
+    }
 }
 

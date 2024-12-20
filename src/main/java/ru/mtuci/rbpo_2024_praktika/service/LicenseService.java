@@ -14,4 +14,6 @@ public interface LicenseService {
     List<License> getAllLicenses();
     Ticket activateLicense(String code, String deviceId, Device device);
     List<Ticket> getLicenseInfo(String macAddress);
+    void blockLicense(Long licenseId);
+    void unblockLicense(Long licenseId);
 }
