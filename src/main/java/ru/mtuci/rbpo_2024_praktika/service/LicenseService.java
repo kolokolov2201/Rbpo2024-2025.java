@@ -5,6 +5,7 @@ import ru.mtuci.rbpo_2024_praktika.model.Device;
 import ru.mtuci.rbpo_2024_praktika.model.License;
 import ru.mtuci.rbpo_2024_praktika.model.Ticket;
 import ru.mtuci.rbpo_2024_praktika.request.LicenseRequest;
+import ru.mtuci.rbpo_2024_praktika.request.UpdateLicenseRequest;
 
 import java.util.List;
 
@@ -16,4 +17,5 @@ public interface LicenseService {
     List<Ticket> getLicenseInfo(String macAddress);
     void blockLicense(Long licenseId);
     void unblockLicense(Long licenseId);
+    Ticket renewLicense(UpdateLicenseRequest updateLicenseRequest);
 }

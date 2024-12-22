@@ -6,4 +6,5 @@ import ru.mtuci.rbpo_2024_praktika.model.DeviceLicense;
 
 @Repository
 public interface DeviceLicenseRepository extends JpaRepository<DeviceLicense, Long> {
+    boolean existsByLicenseIdAndDeviceId(Long licenseId, Long deviceId);
 }

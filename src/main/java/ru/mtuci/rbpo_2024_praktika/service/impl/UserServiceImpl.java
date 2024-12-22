@@ -1,6 +1,7 @@
 package ru.mtuci.rbpo_2024_praktika.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import ru.mtuci.rbpo_2024_praktika.model.ApplicationUser;
 import ru.mtuci.rbpo_2024_praktika.repository.UserRepository;
@@ -30,5 +31,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<ApplicationUser> getAllUsers() {
         return userRepository.findAll();
+    }
+    @Override
+    public ApplicationUser getAuthenticatedUser(UserDetails userDetails) {
+        ApplicationUser applicationUser = new ApplicationUser();
+        applicationUser.setEmail(userDetails.getUsername());
+        return applicationUser;
     }
 }

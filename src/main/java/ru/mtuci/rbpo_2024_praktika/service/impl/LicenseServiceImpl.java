@@ -8,6 +8,7 @@ import ru.mtuci.rbpo_2024_praktika.repository.DeviceLicenseRepository;
 import ru.mtuci.rbpo_2024_praktika.repository.LicenseHistoryRepository;
 import ru.mtuci.rbpo_2024_praktika.repository.LicenseRepository;
 import ru.mtuci.rbpo_2024_praktika.request.LicenseRequest;
+import ru.mtuci.rbpo_2024_praktika.request.UpdateLicenseRequest;
 import ru.mtuci.rbpo_2024_praktika.service.LicenseHistoryService;
 import ru.mtuci.rbpo_2024_praktika.service.LicenseService;
 import ru.mtuci.rbpo_2024_praktika.service.LicenseTypeService;
@@ -16,6 +17,9 @@ import ru.mtuci.rbpo_2024_praktika.service.UserService;
 import ru.mtuci.rbpo_2024_praktika.repository.DeviceRepository;
 
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 
@@ -193,5 +197,58 @@ public class LicenseServiceImpl implements LicenseService {
         license.setBlocked(false);
         licenseRepository.save(license);
     }
-}
+    @Override
+    public Ticket renewLicense(UpdateLicenseRequest updateLicenseRequest) {
+        License license = getByCode(updateLicenseRequest.getCode());
+        if (license == null) {
+            throw new IllegalArgumentException("Лицензия не найдена");
+        }
+        ApplicationUser licenseOwner = license.getApplicationUser();
+        if (licenseOwner == null){
+            throw new IllegalArgumentException("Сначала активируйте лицензию");
+        }
 
+
+        Device device = deviceRepository.findByMacAddress(updateLicenseRequest.getMacAddress())
+                .orElseThrow(() -> new IllegalArgumentException("Устройство не найдено."));
+
+        boolean isLinked = deviceLicenseRepository.existsByLicenseIdAndDeviceId(license.getId(), device.getId());
+        if (!isLinked) {
+            throw new IllegalArgumentException("Устройство не связано с данной лицензией.");
+        }
+
+
+        Date newEndingDate = Date.from(
+                (license.getEndingDate() != null
+                        ? Instant.ofEpochMilli(license.getEndingDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDate()
+                        : LocalDate.now()
+                ).plusMonths(license.getLicenseType().getDefaultDuration())
+                        .atStartOfDay(ZoneId.systemDefault())
+                        .toInstant()
+        );
+
+        license.setEndingDate(newEndingDate);
+        licenseRepository.save(license);
+        recordLicenseChange(
+                license,
+                "продление",
+                "Новая дата истечения: " + newEndingDate
+        );
+        return ticketGenerator.generateTicket(license, device);
+
+    }
+    private void recordLicenseChange(License license, String status, String description){
+        LicenseHistory licenseHistory = new LicenseHistory(
+                null,
+                license,
+                license.getApplicationUser(),
+                status,
+                new Date(),
+                description
+        );
+        licenseHistoryRepository.save(licenseHistory);
+    }
+    private License getByCode(String key) {
+        return licenseRepository.findByCode(key).orElse(null);
+    }
+}
