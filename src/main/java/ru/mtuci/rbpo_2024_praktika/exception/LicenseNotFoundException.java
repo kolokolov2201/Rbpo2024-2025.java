@@ -5,8 +5,4 @@ public class LicenseNotFoundException extends RuntimeException {
     public LicenseNotFoundException(String message) {
         super(message);
     }
-
-    public LicenseNotFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

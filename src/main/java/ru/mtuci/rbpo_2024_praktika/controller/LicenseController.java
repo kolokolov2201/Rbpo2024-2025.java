@@ -5,12 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import ru.mtuci.rbpo_2024_praktika.exception.ActivationNotPossibleException;
 import ru.mtuci.rbpo_2024_praktika.exception.LicenseNotFoundException;
 import ru.mtuci.rbpo_2024_praktika.exception.LicenseStateException;
-import ru.mtuci.rbpo_2024_praktika.model.ApplicationUser;
 import ru.mtuci.rbpo_2024_praktika.model.Device;
 import ru.mtuci.rbpo_2024_praktika.model.License;
 import ru.mtuci.rbpo_2024_praktika.model.Ticket;
@@ -19,7 +17,6 @@ import ru.mtuci.rbpo_2024_praktika.request.ActivationRequest;
 import ru.mtuci.rbpo_2024_praktika.request.LicenseRequest;
 import ru.mtuci.rbpo_2024_praktika.request.UpdateLicenseRequest;
 import ru.mtuci.rbpo_2024_praktika.service.LicenseService;
-import ru.mtuci.rbpo_2024_praktika.service.UserService;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +28,6 @@ public class LicenseController {
 
     private final LicenseService licenseService;
     private final DeviceRepository deviceRepository;
-    private final UserService userService;
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
