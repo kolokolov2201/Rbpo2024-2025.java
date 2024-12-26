@@ -10,5 +10,6 @@ public interface UserService {
     Optional<ApplicationUser> findById(Long id);
     void deleteUser(Long id);
     List<ApplicationUser> getAllUsers();
-    ApplicationUser getAuthenticatedUser(UserDetails userDetails);
+    public ApplicationUser getAuthenticatedUser();
+    public Optional<ApplicationUser> findByEmail(String email);
 }

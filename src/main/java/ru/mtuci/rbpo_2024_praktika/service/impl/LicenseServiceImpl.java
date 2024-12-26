@@ -24,7 +24,7 @@ import ru.mtuci.rbpo_2024_praktika.repository.DeviceRepository;
 //TOD: 5. activateLicense - нет проверки, что не превышено максимально доступное число устройств лицензии !!!!!Сделано
 //TOD: 6. activateLicense - Пользователь должен иметь возможность активировать лицензию единожды на каждом своём устройстве в рамках лимита устройств !!!!!Сделано
 //TOD: 7. getLicenseInfo - должен возвращаться один тикет, а не список !!!!!Сделано
-//TODO: 8. renewLicense - все действия с лицензией должен проводить либо владелец, либо пользователь лицензии. И никто другой
+//TOD: 8. renewLicense - все действия с лицензией должен проводить либо владелец, либо пользователь лицензии. И никто другой !!!!!Сделано
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -51,6 +51,7 @@ public class LicenseServiceImpl implements LicenseService {
         Long ownerId = licenseRequest.getOwnerId();
         Long licenseTypeId = licenseRequest.getLicenseTypeId();
         Integer deviceCount = licenseRequest.getDeviceCount();
+
 
         Product product = productService.findById(productId)
                 .orElseThrow(() -> new ProductNotFoundException("Product with ID " + productId + " not found"));
@@ -98,10 +99,17 @@ public class LicenseServiceImpl implements LicenseService {
     @Override
     public Ticket activateLicense(String code, String deviceId, Device device) {
         Optional<License> optionalLicense = licenseRepository.findByCode(code);
+        ApplicationUser authenticatedUser = userService.getAuthenticatedUser();
+
+        if (authenticatedUser == null) {
+            throw new IllegalArgumentException("Пользователь не аутентифицирован");
+        }
 
         if (optionalLicense.isPresent()) {
             License license = optionalLicense.get();
-
+            if (!license.getOwner().equals(authenticatedUser) && !license.getApplicationUser().equals(authenticatedUser)) {
+                throw new IllegalArgumentException("У вас нет прав на активацию этой лицензии");
+            }
             if (!license.isActive()) {
                 throw new ActivationNotPossibleException("Лицензия не активна");
             }
@@ -212,15 +220,20 @@ public class LicenseServiceImpl implements LicenseService {
     }
     @Override
     public Ticket renewLicense(UpdateLicenseRequest updateLicenseRequest) {
+        ApplicationUser authenticatedUser = userService.getAuthenticatedUser();
+
+        if (authenticatedUser == null) {
+            throw new IllegalArgumentException("Пользователь не аутентифицирован");
+        }
+
         License license = getByCode(updateLicenseRequest.getCode());
         if (license == null) {
             throw new IllegalArgumentException("Лицензия не найдена");
         }
-        ApplicationUser licenseOwner = license.getApplicationUser();
-        if (licenseOwner == null){
-            throw new IllegalArgumentException("Сначала активируйте лицензию");
-        }
 
+        if (!license.getOwner().equals(authenticatedUser) && !license.getApplicationUser().equals(authenticatedUser)) {
+            throw new IllegalArgumentException("У вас нет прав на продление этой лицензии");
+        }
 
         Device device = deviceRepository.findByMacAddress(updateLicenseRequest.getMacAddress())
                 .orElseThrow(() -> new IllegalArgumentException("Устройство не найдено."));
@@ -229,7 +242,6 @@ public class LicenseServiceImpl implements LicenseService {
         if (!isLinked) {
             throw new IllegalArgumentException("Устройство не связано с данной лицензией.");
         }
-
 
         Date newEndingDate = Date.from(
                 (license.getEndingDate() != null
@@ -248,8 +260,8 @@ public class LicenseServiceImpl implements LicenseService {
                 "Новая дата истечения: " + newEndingDate
         );
         return ticketGenerator.generateTicket(license, device);
-
     }
+
     private void recordLicenseChange(License license, String status, String description){
         LicenseHistory licenseHistory = new LicenseHistory(
                 null,

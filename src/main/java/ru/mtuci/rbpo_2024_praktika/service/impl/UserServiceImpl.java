@@ -1,6 +1,8 @@
 package ru.mtuci.rbpo_2024_praktika.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import ru.mtuci.rbpo_2024_praktika.model.ApplicationUser;
@@ -33,9 +35,15 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
     @Override
-    public ApplicationUser getAuthenticatedUser(UserDetails userDetails) {
-        ApplicationUser applicationUser = new ApplicationUser();
-        applicationUser.setEmail(userDetails.getUsername());
-        return applicationUser;
+    public Optional<ApplicationUser> findByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+    public ApplicationUser getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            String username = (String) authentication.getPrincipal();
+            return findByEmail(username).orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
+        }
+        return null;
     }
 }
