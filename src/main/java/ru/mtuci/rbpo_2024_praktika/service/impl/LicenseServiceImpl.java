@@ -16,6 +16,14 @@ import ru.mtuci.rbpo_2024_praktika.service.ProductService;
 import ru.mtuci.rbpo_2024_praktika.service.UserService;
 import ru.mtuci.rbpo_2024_praktika.repository.DeviceRepository;
 
+//TODO: 1. createLicense - user должен устанавливаться только при первой активации
+//TODO: 2. activateLicense - запись в deviceLicense должна происходить только если такой записи ещё нет
+//TODO: 3. activateLicense - дата окончания у вас пересчитывается с каждой повторной активацией?
+//TODO: 4. activateLicense - нарушена последовательность действий при активации. Вы сначала сохраняете информацию, а потом делаете проверки.
+//TODO: 5. activateLicense - нет проверки, что не превышено максимально доступное число устройств лицензии
+//TODO: 6. activateLicense - Пользователь должен иметь возможность активировать лицензию единожды на каждом своём устройстве в рамках лимита устройств
+//TODO: 7. getLicenseInfo - должен возвращаться один тикет, а не список
+//TODO: 8. renewLicense - все действия с лицензией должен проводить либо владелец, либо пользователь лицензии. И никто другой
 
 import java.time.Instant;
 import java.time.LocalDate;

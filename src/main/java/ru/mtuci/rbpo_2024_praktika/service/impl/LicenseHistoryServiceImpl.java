@@ -8,7 +8,7 @@ import ru.mtuci.rbpo_2024_praktika.model.LicenseHistory;
 import ru.mtuci.rbpo_2024_praktika.repository.LicenseHistoryRepository;
 import ru.mtuci.rbpo_2024_praktika.service.LicenseHistoryService;
 import java.util.Date;
-
+//TODO: 1. А читать историю нельзя?
 @Service
 @RequiredArgsConstructor
 public class LicenseHistoryServiceImpl implements LicenseHistoryService {

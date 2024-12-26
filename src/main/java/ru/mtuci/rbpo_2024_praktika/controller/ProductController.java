@@ -11,6 +11,7 @@ import ru.mtuci.rbpo_2024_praktika.request.ProductRequest;
 import ru.mtuci.rbpo_2024_praktika.service.ProductService;
 
 import java.util.List;
+//TODO: 1. Дать пользователю возможность получить список продуктов !!!!!Сделано
 
 @RestController
 @RequestMapping("/products")
@@ -46,7 +47,7 @@ public class ProductController {
     }
 
     @GetMapping("/view")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")//тут
     public ResponseEntity<List<Product>> getAllProducts() {
         try {
             List<Product> products = productService.getAllProducts();

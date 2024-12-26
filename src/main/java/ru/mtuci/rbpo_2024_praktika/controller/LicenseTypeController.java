@@ -11,6 +11,7 @@ import ru.mtuci.rbpo_2024_praktika.request.LicenseTypeRequest;
 import ru.mtuci.rbpo_2024_praktika.service.LicenseTypeService;
 
 import java.util.List;
+//TODO: 1. Дать пользователю возможность получить список типов лицензий !!!!!Сделано
 
 @RestController
 @RequestMapping("/licensetypes")
@@ -44,7 +45,7 @@ public class LicenseTypeController {
         }
     }
     @GetMapping("/view")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")//тут
     public ResponseEntity<List<LicenseType>> getAllLicenseTypes() {
         try {
             List<LicenseType> licenseTypes = licenseTypeService.getAllLicenseTypes();
