@@ -7,35 +7,33 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 import java.util.Date;
-//TODO: 1. computeHmac - отсутствует механизм генерации цифровой подписи. Вы генерируете просто хэш. Как клиент проверит его?
+//TOD: 1. computeHmac - отсутствует механизм генерации цифровой подписи. Вы генерируете просто хэш. Как клиент проверит его? !!!!!Сделано
 
 @Component
 public class TicketGenerator {
 
     private static final String HMAC_SHA256 = "HmacSHA256";
+
     @Value("${jwt.secret}")
     private String secretKey;
 
     private String createDigitalSignature(License license, Device device) {
-        String rawData = assembleRawData(license, device);
-        return computeHmac(rawData);
-    }
-
-    private String assembleRawData(License license, Device device) {
-        return license.getCode() + license.getApplicationUser() + device.getId() + license.getEndingDate();
-    }
-
-    private String computeHmac(String data) {
         try {
+            String rawData = license.getCode() + license.getApplicationUser() + device.getId() + license.getEndingDate();
+
             SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), HMAC_SHA256);
+
             Mac mac = Mac.getInstance(HMAC_SHA256);
             mac.init(secretKeySpec);
-            byte[] hmacBytes = mac.doFinal(data.getBytes());
+
+            byte[] hmacBytes = mac.doFinal(rawData.getBytes());
+
             return Base64.getEncoder().encodeToString(hmacBytes);
         } catch (Exception e) {
             throw new RuntimeException("Ошибка при генерации цифровой подписи", e);
         }
     }
+
 
     public Ticket generateTicket(License license, Device device) {
         Ticket ticket = new Ticket();

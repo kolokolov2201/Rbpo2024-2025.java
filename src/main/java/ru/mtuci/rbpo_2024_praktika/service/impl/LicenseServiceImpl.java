@@ -18,12 +18,12 @@ import ru.mtuci.rbpo_2024_praktika.service.UserService;
 import ru.mtuci.rbpo_2024_praktika.repository.DeviceRepository;
 
 //TODO: 1. createLicense - user должен устанавливаться только при первой активации
-//TODO: 2. activateLicense - запись в deviceLicense должна происходить только если такой записи ещё нет
-//TODO: 3. activateLicense - дата окончания у вас пересчитывается с каждой повторной активацией?
-//TODO: 4. activateLicense - нарушена последовательность действий при активации. Вы сначала сохраняете информацию, а потом делаете проверки.
-//TODO: 5. activateLicense - нет проверки, что не превышено максимально доступное число устройств лицензии
-//TODO: 6. activateLicense - Пользователь должен иметь возможность активировать лицензию единожды на каждом своём устройстве в рамках лимита устройств
-//TODO: 7. getLicenseInfo - должен возвращаться один тикет, а не список !!!!!Сделано
+//TOD: 2. activateLicense - запись в deviceLicense должна происходить только если такой записи ещё нет !!!!!Сделано
+//TOD: 3. activateLicense - дата окончания у вас пересчитывается с каждой повторной активацией? !!!!!Сделано
+//TOD: 4. activateLicense - нарушена последовательность действий при активации. Вы сначала сохраняете информацию, а потом делаете проверки. !!!!!Сделано
+//TOD: 5. activateLicense - нет проверки, что не превышено максимально доступное число устройств лицензии !!!!!Сделано
+//TOD: 6. activateLicense - Пользователь должен иметь возможность активировать лицензию единожды на каждом своём устройстве в рамках лимита устройств !!!!!Сделано
+//TOD: 7. getLicenseInfo - должен возвращаться один тикет, а не список !!!!!Сделано
 //TODO: 8. renewLicense - все действия с лицензией должен проводить либо владелец, либо пользователь лицензии. И никто другой
 
 import java.time.Instant;
@@ -107,10 +107,33 @@ public class LicenseServiceImpl implements LicenseService {
             }
 
             Optional<Device> optionalDevice = deviceRepository.findById(device.getId());
-            if (optionalDevice.isEmpty()){
-                throw new DeviceNotFoundException("Устройство с ID "+ device.getId() + " не найдено");
+            if (optionalDevice.isEmpty()) {
+                throw new DeviceNotFoundException("Устройство с ID " + device.getId() + " не найдено");
             }
             Device actualDevice = optionalDevice.get();
+
+            long activeDeviceCount = deviceLicenseRepository.countByLicense(license);
+            if (activeDeviceCount >= license.getDeviceCount()) {
+                throw new LicenseLimitExceededException("Достигнуто максимальное количество устройств для этой лицензии");
+            }
+
+            Optional<DeviceLicense> existingDeviceLicense = deviceLicenseRepository.findByLicenseAndDevice(license, actualDevice);
+            if (existingDeviceLicense.isPresent()) {
+                throw new LicenseAlreadyActivatedException("Лицензия уже активирована на этом устройстве");
+            }
+
+            Date firstActivationDate = license.getFirstActivationDate();
+            if (firstActivationDate == null) {
+                firstActivationDate = new Date();
+                license.setFirstActivationDate(firstActivationDate);
+            }
+
+            Date endingDate = null;
+            if (license.getDuration() != null && license.getDuration() > 0) {
+                endingDate = calculateEndingDate(firstActivationDate, license.getDuration());
+            }
+            license.setEndingDate(endingDate);
+            license.setBlocked(false);
 
             DeviceLicense deviceLicense = new DeviceLicense();
             deviceLicense.setLicense(license);
@@ -118,28 +141,10 @@ public class LicenseServiceImpl implements LicenseService {
             deviceLicense.setActivationDate(new Date());
             deviceLicenseRepository.save(deviceLicense);
 
-            Date firstActivationDate = license.getFirstActivationDate();
-            Date endingDate = null;
-
-            if (firstActivationDate == null) {
-                firstActivationDate = new Date();
-                license.setFirstActivationDate(firstActivationDate);
-            }
-
-            if (license.getDuration() != null){
-                if (license.getDuration() > 0){
-                    endingDate = calculateEndingDate(firstActivationDate, license.getDuration());
-                }
-            }
-
-            license.setEndingDate(endingDate);
-            license.setBlocked(false);
-
             License savedLicense = licenseRepository.save(license);
             ApplicationUser applicationUser = actualDevice.getApplicationUser();
 
-
-            if (applicationUser != null){
+            if (applicationUser != null) {
                 licenseHistoryService.recordLicenseChange(savedLicense, applicationUser, "Activation", "License successfully activated");
             } else {
                 throw new IllegalArgumentException("ApplicationUser can not be null when activating a license");
@@ -158,9 +163,10 @@ public class LicenseServiceImpl implements LicenseService {
         calendar.add(Calendar.DAY_OF_YEAR, duration);
         return calendar.getTime();
     }
+
     @Override
     public Ticket getLicenseInfo(DeviceInfoRequest deviceInfoRequest) {
-        String macAddress = deviceInfoRequest.getMacAddress(); // Получаем MAC-адрес из запроса
+        String macAddress = deviceInfoRequest.getMacAddress();
         Optional<Device> optionalDevice = deviceRepository.findByMacAddress(macAddress);
 
         if (optionalDevice.isPresent()) {
