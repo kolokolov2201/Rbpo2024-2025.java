@@ -7,6 +7,7 @@ import ru.mtuci.rbpo_2024_praktika.model.*;
 import ru.mtuci.rbpo_2024_praktika.repository.DeviceLicenseRepository;
 import ru.mtuci.rbpo_2024_praktika.repository.LicenseHistoryRepository;
 import ru.mtuci.rbpo_2024_praktika.repository.LicenseRepository;
+import ru.mtuci.rbpo_2024_praktika.request.DeviceInfoRequest;
 import ru.mtuci.rbpo_2024_praktika.request.LicenseRequest;
 import ru.mtuci.rbpo_2024_praktika.request.UpdateLicenseRequest;
 import ru.mtuci.rbpo_2024_praktika.service.LicenseHistoryService;
@@ -158,27 +159,25 @@ public class LicenseServiceImpl implements LicenseService {
         return calendar.getTime();
     }
     @Override
-    public List<Ticket> getLicenseInfo(String macAddress) {
+    public Ticket getLicenseInfo(DeviceInfoRequest deviceInfoRequest) {
+        String macAddress = deviceInfoRequest.getMacAddress(); // Получаем MAC-адрес из запроса
         Optional<Device> optionalDevice = deviceRepository.findByMacAddress(macAddress);
+
         if (optionalDevice.isPresent()) {
             Device device = optionalDevice.get();
             List<License> licenses = licenseRepository.findByApplicationUser(device.getApplicationUser());
+
             if (!licenses.isEmpty()) {
-                List<Ticket> tickets = new ArrayList<>();
-                for (License license : licenses) {
-                    tickets.add(ticketGenerator.generateTicket(license, device));
-                }
-                return tickets;
-
-
+                License firstLicense = licenses.get(0);
+                return ticketGenerator.generateTicket(firstLicense, device);
             } else {
                 return null;
             }
-
         } else {
             return null;
         }
     }
+
     @Override
     public void blockLicense(Long licenseId) {
         License license = licenseRepository.findById(licenseId)

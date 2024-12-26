@@ -4,6 +4,7 @@ import ru.mtuci.rbpo_2024_praktika.model.ApplicationUser;
 import ru.mtuci.rbpo_2024_praktika.model.Device;
 import ru.mtuci.rbpo_2024_praktika.model.License;
 import ru.mtuci.rbpo_2024_praktika.model.Ticket;
+import ru.mtuci.rbpo_2024_praktika.request.DeviceInfoRequest;
 import ru.mtuci.rbpo_2024_praktika.request.LicenseRequest;
 import ru.mtuci.rbpo_2024_praktika.request.UpdateLicenseRequest;
 
@@ -14,7 +15,7 @@ public interface LicenseService {
     void deleteLicense(Long id);
     List<License> getAllLicenses();
     Ticket activateLicense(String code, String deviceId, Device device);
-    List<Ticket> getLicenseInfo(String macAddress);
+    Ticket getLicenseInfo(DeviceInfoRequest deviceInfoRequest);
     void blockLicense(Long licenseId);
     void unblockLicense(Long licenseId);
     Ticket renewLicense(UpdateLicenseRequest updateLicenseRequest);
