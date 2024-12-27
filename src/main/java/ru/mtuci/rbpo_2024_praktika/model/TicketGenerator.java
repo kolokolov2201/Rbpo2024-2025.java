@@ -1,42 +1,51 @@
 package ru.mtuci.rbpo_2024_praktika.model;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
+import java.security.*;
 import java.util.Base64;
 import java.util.Date;
-//TODO: 1. computeHmac - отсутствует механизм генерации цифровой подписи. Вы генерируете просто хэш. Как клиент проверит его?
-
+//TOD: 1. computeHmac - отсутствует механизм генерации цифровой подписи. Вы генерируете просто хэш. Как клиент проверит его?
 @Component
 public class TicketGenerator {
 
-    private static final String HMAC_SHA256 = "HmacSHA256";
-    @Value("${jwt.secret}")
-    private String secretKey;
+    private static final String SIGNATURE_ALGORITHM = "SHA256withRSA";
 
-    private String createDigitalSignature(License license, Device device) {
-        String rawData = assembleRawData(license, device);
-        return computeHmac(rawData);
+    private PrivateKey privateKey;
+    private PublicKey publicKey;
+
+    public TicketGenerator() throws Exception {
+        generateKeyPair();
+    }
+
+    private void generateKeyPair() throws Exception {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        keyPairGenerator.initialize(2048);
+        KeyPair keyPair = keyPairGenerator.generateKeyPair();
+        this.privateKey = keyPair.getPrivate();
+        this.publicKey = keyPair.getPublic();
+    }
+
+    public String createDigitalSignature(License license, Device device) {
+        try {
+            String rawData = assembleRawData(license, device);
+            return signData(rawData);
+        } catch (Exception e) {
+            throw new RuntimeException("Ошибка при создании цифровой подписи", e);
+        }
     }
 
     private String assembleRawData(License license, Device device) {
         return license.getCode() + license.getApplicationUser() + device.getId() + license.getEndingDate();
     }
 
-    private String computeHmac(String data) {
-        try {
-            SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(), HMAC_SHA256);
-            Mac mac = Mac.getInstance(HMAC_SHA256);
-            mac.init(secretKeySpec);
-            byte[] hmacBytes = mac.doFinal(data.getBytes());
-            return Base64.getEncoder().encodeToString(hmacBytes);
-        } catch (Exception e) {
-            throw new RuntimeException("Ошибка при генерации цифровой подписи", e);
-        }
+    private String signData(String data) throws Exception {
+        Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
+        signature.initSign(privateKey);
+        signature.update(data.getBytes());
+        byte[] signedData = signature.sign();
+        return Base64.getEncoder().encodeToString(signedData);
     }
-
 
     public Ticket generateTicket(License license, Device device) {
         Ticket ticket = new Ticket();
