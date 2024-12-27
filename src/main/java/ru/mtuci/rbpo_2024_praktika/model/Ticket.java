@@ -15,7 +15,7 @@ public class Ticket {
     private Date firstActivationDate;
     private Date endingDate;
     private Long userId;
-    private String deviceId;
+    private Long deviceId;
     private String blocked;
     private String digitalSignature;
     @JsonIgnore

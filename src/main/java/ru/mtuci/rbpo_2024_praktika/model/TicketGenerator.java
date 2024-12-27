@@ -54,7 +54,7 @@ public class TicketGenerator {
         ticket.setFirstActivationDate(license.getFirstActivationDate());
         ticket.setEndingDate(license.getEndingDate());
         ticket.setUserId(getUserId(device));
-        ticket.setDeviceId(device.getMacAddress());
+        ticket.setDeviceId(device.getId());
         ticket.setBlocked(getBlockedStatus(license));
         ticket.setDigitalSignature(createDigitalSignature(license, device));
         return ticket;
