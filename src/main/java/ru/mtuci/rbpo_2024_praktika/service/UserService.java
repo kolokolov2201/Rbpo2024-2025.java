@@ -1,6 +1,5 @@
 package ru.mtuci.rbpo_2024_praktika.service;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import ru.mtuci.rbpo_2024_praktika.model.ApplicationUser;
 
 import java.util.List;
@@ -10,6 +9,6 @@ public interface UserService {
     Optional<ApplicationUser> findById(Long id);
     void deleteUser(Long id);
     List<ApplicationUser> getAllUsers();
-    public ApplicationUser getAuthenticatedUser();
-    public Optional<ApplicationUser> findByEmail(String email);
+    ApplicationUser getAuthenticatedUser();
+    Optional<ApplicationUser> findByEmail(String email);
 }

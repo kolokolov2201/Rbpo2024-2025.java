@@ -1,5 +1,6 @@
 package ru.mtuci.rbpo_2024_praktika.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -51,6 +52,7 @@ public class License {
     @Column(name = "device_count")
     private Integer deviceCount;
 
+    @JsonIgnore
     @Getter
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id", referencedColumnName = "id")

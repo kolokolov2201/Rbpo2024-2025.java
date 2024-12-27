@@ -17,7 +17,7 @@ import ru.mtuci.rbpo_2024_praktika.service.ProductService;
 import ru.mtuci.rbpo_2024_praktika.service.UserService;
 import ru.mtuci.rbpo_2024_praktika.repository.DeviceRepository;
 
-//TODO: 1. createLicense - user должен устанавливаться только при первой активации
+//TOD: 1. createLicense - user должен устанавливаться только при первой активации СОМНИТЕЛЬНО
 //TOD: 2. activateLicense - запись в deviceLicense должна происходить только если такой записи ещё нет !!!!!Сделано
 //TOD: 3. activateLicense - дата окончания у вас пересчитывается с каждой повторной активацией? !!!!!Сделано
 //TOD: 4. activateLicense - нарушена последовательность действий при активации. Вы сначала сохраняете информацию, а потом делаете проверки. !!!!!Сделано
@@ -67,7 +67,6 @@ public class LicenseServiceImpl implements LicenseService {
 
         License license = new License();
         license.setProduct(product);
-        license.setApplicationUser(user);
         license.setOwner(user);
         license.setLicenseType(licenseType);
         license.setDeviceCount(deviceCount != null ? deviceCount : 0);
@@ -107,6 +106,10 @@ public class LicenseServiceImpl implements LicenseService {
 
         if (optionalLicense.isPresent()) {
             License license = optionalLicense.get();
+            if (license.getApplicationUser() == null) {
+                license.setApplicationUser(authenticatedUser);
+                licenseRepository.save(license);
+            }
             if (!license.getOwner().equals(authenticatedUser) && !license.getApplicationUser().equals(authenticatedUser)) {
                 throw new IllegalArgumentException("У вас нет прав на активацию этой лицензии");
             }

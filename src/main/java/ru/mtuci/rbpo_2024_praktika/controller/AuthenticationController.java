@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.mtuci.rbpo_2024_praktika.configuration.JwtTokenProvider;
+import ru.mtuci.rbpo_2024_praktika.model.ApplicationRole;
 import ru.mtuci.rbpo_2024_praktika.model.ApplicationUser;
 import ru.mtuci.rbpo_2024_praktika.request.AuthenticationRequest;
 import ru.mtuci.rbpo_2024_praktika.model.AuthenticationResponse;
@@ -60,15 +61,16 @@ public class AuthenticationController {
 
         ApplicationUser newUser = new ApplicationUser();
         newUser.setEmail(request.getEmail());
-        newUser.setPassword(hashPassword(request.getPassword())); // Хеширование пароля
-        newUser.setRole(request.getRole());
-        newUser.setUsername(request.getUsername());
+        newUser.setPassword(hashPassword(request.getPassword()));
 
+        newUser.setRole(ApplicationRole.USER);
+        newUser.setUsername(request.getUsername());
         userRepository.save(newUser);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body("User registered successfully");
     }
+
 
     private String hashPassword(String password) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();

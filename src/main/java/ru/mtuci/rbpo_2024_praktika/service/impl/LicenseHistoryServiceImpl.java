@@ -8,12 +8,18 @@ import ru.mtuci.rbpo_2024_praktika.model.LicenseHistory;
 import ru.mtuci.rbpo_2024_praktika.repository.LicenseHistoryRepository;
 import ru.mtuci.rbpo_2024_praktika.service.LicenseHistoryService;
 import java.util.Date;
-//TODO: 1. А читать историю нельзя?
+import java.util.List;
+
+//TOD: 1. А читать историю нельзя? !!!!Сделано
 @Service
 @RequiredArgsConstructor
 public class LicenseHistoryServiceImpl implements LicenseHistoryService {
-
     private final LicenseHistoryRepository licenseHistoryRepository;
+
+    @Override
+    public List<LicenseHistory> getAllHistory() {
+        return licenseHistoryRepository.findAll();
+    }
 
     @Override
     public void recordLicenseChange(License license, ApplicationUser user, String action, String description) {
