@@ -31,7 +31,7 @@ public class LicenseTypeServiceImpl implements LicenseTypeService {
     @Override
     public void deleteLicenseType(Long id) {
         if (!licenseTypeRepository.existsById(id)) {
-            throw new IllegalArgumentException("License type not found for id: " + id);
+            throw new IllegalArgumentException("Тип лицензии не найден по id: " + id);
         }
         licenseTypeRepository.deleteById(id);
     }

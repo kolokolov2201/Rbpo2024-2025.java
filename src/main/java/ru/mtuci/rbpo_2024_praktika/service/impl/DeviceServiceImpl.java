@@ -12,7 +12,7 @@ import ru.mtuci.rbpo_2024_praktika.service.DeviceService;
 import ru.mtuci.rbpo_2024_praktika.service.UserService;
 
 import java.util.List;
-//TODO: 1. Нельзя самим генерировать mac-адрес. Получаем только от клиента и никак иначе !!!!!Сделано
+//TOD: 1. Нельзя самим генерировать mac-адрес. Получаем только от клиента и никак иначе !!!!!Сделано
 
 @Service
 @RequiredArgsConstructor
@@ -25,11 +25,11 @@ public class DeviceServiceImpl implements DeviceService {
     public Device createDevice(DeviceRequest deviceRequest) {
         Long userId = deviceRequest.getUserId();
         ApplicationUser user = userService.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with id " + userId + " not found"));
+                .orElseThrow(() -> new UserNotFoundException("Пользователь с id " + userId + " не найден"));
 
-        String macAddress = deviceRequest.getMacAddress();//тут
+        String macAddress = deviceRequest.getMacAddress(); // тут
         if (macAddress == null || macAddress.isEmpty()) {
-            throw new InvalidInputException("MAC address must be provided");
+            throw new InvalidInputException("MAC-адрес должен быть указан");
         }
 
         Device device = new Device();
@@ -43,10 +43,11 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public void deleteDevice(Long id) {
         if(!deviceRepository.existsById(id)){
-            throw new IllegalArgumentException("Device not found for id: " + id);
+            throw new IllegalArgumentException("Устройство не найдено по id: " + id);
         }
         deviceRepository.deleteById(id);
     }
+
 
     @Override
     public List<Device> getAllDevices() {

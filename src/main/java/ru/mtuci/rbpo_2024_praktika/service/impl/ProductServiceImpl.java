@@ -30,8 +30,8 @@ public class ProductServiceImpl implements ProductService {
     }
     @Override
     public void deleteProduct(Long id) {
-        if(!productRepository.existsById(id)){
-            throw new IllegalArgumentException("Product not found for id: " + id);
+        if (!productRepository.existsById(id)) {
+            throw new IllegalArgumentException("Продукт не найден по id: " + id);
         }
         productRepository.deleteById(id);
     }

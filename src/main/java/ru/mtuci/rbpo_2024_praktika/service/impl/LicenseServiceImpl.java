@@ -17,7 +17,7 @@ import ru.mtuci.rbpo_2024_praktika.service.ProductService;
 import ru.mtuci.rbpo_2024_praktika.service.UserService;
 import ru.mtuci.rbpo_2024_praktika.repository.DeviceRepository;
 
-//TOD: 1. createLicense - user должен устанавливаться только при первой активации СОМНИТЕЛЬНО
+//TOD: 1. createLicense - user должен устанавливаться только при первой активации Сделал
 //TOD: 2. activateLicense - запись в deviceLicense должна происходить только если такой записи ещё нет !!!!!Сделано
 //TOD: 3. activateLicense - дата окончания у вас пересчитывается с каждой повторной активацией? !!!!!Сделано
 //TOD: 4. activateLicense - нарушена последовательность действий при активации. Вы сначала сохраняете информацию, а потом делаете проверки. !!!!!Сделано
@@ -26,9 +26,6 @@ import ru.mtuci.rbpo_2024_praktika.repository.DeviceRepository;
 //TOD: 7. getLicenseInfo - должен возвращаться один тикет, а не список !!!!!Сделано
 //TOD: 8. renewLicense - все действия с лицензией должен проводить либо владелец, либо пользователь лицензии. И никто другой !!!!!Сделано
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
 
 
@@ -156,11 +153,10 @@ public class LicenseServiceImpl implements LicenseService {
             ApplicationUser applicationUser = actualDevice.getApplicationUser();
 
             if (applicationUser != null) {
-                licenseHistoryService.recordLicenseChange(savedLicense, applicationUser, "Activation", "License successfully activated");
+                licenseHistoryService.recordLicenseChange(savedLicense, applicationUser, "Активация", "Лицензия успешно активирована");
             } else {
-                throw new IllegalArgumentException("ApplicationUser can not be null when activating a license");
+                throw new IllegalArgumentException("ApplicationUser не может быть null при активации лицензии");
             }
-
             return ticketGenerator.generateTicket(license, actualDevice);
 
         } else {
@@ -246,14 +242,10 @@ public class LicenseServiceImpl implements LicenseService {
             throw new IllegalArgumentException("Устройство не связано с данной лицензией.");
         }
 
-        Date newEndingDate = Date.from(
-                (license.getEndingDate() != null
-                        ? Instant.ofEpochMilli(license.getEndingDate().getTime()).atZone(ZoneId.systemDefault()).toLocalDate()
-                        : LocalDate.now()
-                ).plusMonths(license.getLicenseType().getDefaultDuration())
-                        .atStartOfDay(ZoneId.systemDefault())
-                        .toInstant()
-        );
+        Date newEndingDate = null;
+        if (license.getDuration() != null && license.getDuration() > 0) {
+            newEndingDate = calculateEndingDate(license.getEndingDate(), license.getDuration());
+        }
 
         license.setEndingDate(newEndingDate);
         licenseRepository.save(license);
