@@ -1,6 +1,5 @@
 package ru.mtuci.rbpo_2024_praktika.service;
 
-import ru.mtuci.rbpo_2024_praktika.model.ApplicationUser;
 import ru.mtuci.rbpo_2024_praktika.model.Device;
 import ru.mtuci.rbpo_2024_praktika.model.License;
 import ru.mtuci.rbpo_2024_praktika.model.Ticket;
