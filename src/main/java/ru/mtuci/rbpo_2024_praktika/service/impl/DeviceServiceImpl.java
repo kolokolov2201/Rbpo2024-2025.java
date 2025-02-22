@@ -12,7 +12,7 @@ import ru.mtuci.rbpo_2024_praktika.service.DeviceService;
 import ru.mtuci.rbpo_2024_praktika.service.UserService;
 
 import java.util.List;
-//TOD: 1. Нельзя самим генерировать mac-адрес. Получаем только от клиента и никак иначе !!!!!Сделано
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +27,7 @@ public class DeviceServiceImpl implements DeviceService {
         ApplicationUser user = userService.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("Пользователь с id " + userId + " не найден"));
 
-        String macAddress = deviceRequest.getMacAddress(); // тут
+        String macAddress = deviceRequest.getMacAddress();
         if (macAddress == null || macAddress.isEmpty()) {
             throw new InvalidInputException("MAC-адрес должен быть указан");
         }

@@ -134,13 +134,10 @@ public class LicenseServiceImpl implements LicenseService {
             if (firstActivationDate == null) {
                 firstActivationDate = new Date();
                 license.setFirstActivationDate(firstActivationDate);
+                var endingDate = calculateEndingDate(firstActivationDate, license.getDuration());
+                license.setEndingDate(endingDate);
             }
 
-            Date endingDate = null;
-            if (license.getDuration() != null && license.getDuration() > 0) {
-                endingDate = calculateEndingDate(firstActivationDate, license.getDuration());
-            }
-            license.setEndingDate(endingDate);
             license.setBlocked(false);
 
             DeviceLicense deviceLicense = new DeviceLicense();
@@ -151,12 +148,7 @@ public class LicenseServiceImpl implements LicenseService {
 
             License savedLicense = licenseRepository.save(license);
             ApplicationUser applicationUser = actualDevice.getApplicationUser();
-
-            if (applicationUser != null) {
-                licenseHistoryService.recordLicenseChange(savedLicense, applicationUser, "Активация", "Лицензия успешно активирована");
-            } else {
-                throw new IllegalArgumentException("ApplicationUser не может быть null при активации лицензии");
-            }
+            licenseHistoryService.recordLicenseChange(savedLicense, applicationUser, "Активация", "Лицензия успешно активирована");
             return ticketGenerator.generateTicket(license, actualDevice);
 
         } else {
@@ -170,7 +162,7 @@ public class LicenseServiceImpl implements LicenseService {
         calendar.add(Calendar.DAY_OF_YEAR, duration);
         return calendar.getTime();
     }
-
+//сделать проверку еще по чему то
     @Override
     public Ticket getLicenseInfo(DeviceInfoRequest deviceInfoRequest) {
         String macAddress = deviceInfoRequest.getMacAddress();
@@ -230,7 +222,7 @@ public class LicenseServiceImpl implements LicenseService {
             throw new IllegalArgumentException("Лицензия не найдена");
         }
 
-        if (!license.getOwner().equals(authenticatedUser) && !license.getApplicationUser().equals(authenticatedUser)) {
+        if (!license.getOwner().equals(authenticatedUser) || !license.getApplicationUser().equals(authenticatedUser)) {
             throw new IllegalArgumentException("У вас нет прав на продление этой лицензии");
         }
 

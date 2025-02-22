@@ -47,7 +47,7 @@ public class ProductController {
     }
 
     @GetMapping("/view")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")//тут
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<Product>> getAllProducts() {
         try {
             List<Product> products = productService.getAllProducts();

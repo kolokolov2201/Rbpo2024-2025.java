@@ -45,7 +45,7 @@ public class LicenseTypeController {
         }
     }
     @GetMapping("/view")
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")//тут
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public ResponseEntity<List<LicenseType>> getAllLicenseTypes() {
         try {
             List<LicenseType> licenseTypes = licenseTypeService.getAllLicenseTypes();

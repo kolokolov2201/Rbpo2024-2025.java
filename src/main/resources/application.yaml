@@ -19,3 +19,11 @@ spring:
 jwt:
   secret: KolokolovEgorVladimirovichBKS2201
   expiration: 3600000
+server:
+  port: 8443
+  ssl:
+    enabled: true
+    key-store: classpath:serverCA.jks
+    key-store-type: JKS
+    key-store-password: serverCAPass
+    key-alias: serverCA
