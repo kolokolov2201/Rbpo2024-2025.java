@@ -11,7 +11,7 @@ import ru.mtuci.rbpo_2024_praktika.service.LicenseService;
 
 @RestController
 @RequestMapping("/admin/licenses")
-public class AdminLicenseController {1
+public class AdminLicenseController {12
 
     @Autowired
     private LicenseService licenseService;
